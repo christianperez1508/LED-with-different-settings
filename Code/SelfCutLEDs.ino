@@ -5,13 +5,15 @@
 
 LiquidCrystal_I2C lcd(LCD_ADDRESS, 16, 2);
 
-const byte R_PIN = 9;
-const byte G_PIN = 10;
-const byte B_PIN = 11;
-const byte BUTT_PIN = 2;
+typedef struct {
+  byte RED;
+  byte GREEN;
+  byte BLUE;
+  byte BUTTON;
+} Pins;
 
 typedef struct {
-  byte butt_delay;
+  const byte butt_delay;
   unsigned long first_case_time;
   unsigned long second_case_time;
   unsigned long current_time;
@@ -19,8 +21,8 @@ typedef struct {
 } Timers;
 
 typedef struct {
-  int main_menu;
-  int menu1;
+  byte main_menu;
+  byte menu1;
 } Menu;
 
 typedef struct {
@@ -28,17 +30,18 @@ typedef struct {
   volatile byte flag;
 } Interrupts;
 
+const Pins pins = {9, 10, 11, 2};
 Timers timers = {50, 0, 0, 0, 0};
 Menu menu = {0, 0};
 Interrupts states = {0, 0};
 
 void setup() {
-  pinMode(BUTT_PIN, INPUT_PULLUP);
-  pinMode(R_PIN, OUTPUT);
-  pinMode(G_PIN, OUTPUT);
-  pinMode(B_PIN, OUTPUT);
+  pinMode(pins.BUTTON, INPUT_PULLUP);
+  pinMode(pins.RED, OUTPUT);
+  pinMode(pins.GREEN, OUTPUT);
+  pinMode(pins.BLUE, OUTPUT);
   lcd.begin();
-  attachInterrupt(digitalPinToInterrupt(BUTT_PIN), read_butt, LOW);
+  attachInterrupt(digitalPinToInterrupt(pins.BUTTON), read_butt, LOW);
   lcd.setCursor(3, 0);
   lcd.print("Christian's");
   lcd.setCursor(0, 1);
@@ -338,9 +341,9 @@ void update_screen() {
 }
 
 void RGB(int Red, int Green, int Blue) {
-  analogWrite(R_PIN, Red);
-  analogWrite(B_PIN, Green);
-  analogWrite(G_PIN, Blue);
+  analogWrite(pins.RED, Red);
+  analogWrite(pins.GREEN, Green);
+  analogWrite(pins.BLUE, Blue);
 }
 
 void tungsten(float intensity) {
