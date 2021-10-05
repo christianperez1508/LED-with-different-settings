@@ -6,14 +6,13 @@
 LiquidCrystal_I2C lcd(LCD_ADDRESS, 16, 2);
 
 typedef struct {
-  byte RED;
-  byte GREEN;
-  byte BLUE;
-  byte BUTTON;
+  uint8_t RED;
+  uint8_t GREEN;
+  uint8_t BLUE;
+  uint8_t BUTTON;
 } Pins;
 
 typedef struct {
-  const byte butt_delay;
   unsigned long first_case_time;
   unsigned long second_case_time;
   unsigned long current_time;
@@ -21,19 +20,20 @@ typedef struct {
 } Timers;
 
 typedef struct {
-  byte main_menu;
-  byte menu1;
+  uint8_t main_menu;
+  uint8_t menu1;
 } Menu;
 
 typedef struct {
-  volatile byte state;
-  volatile byte flag;
+  volatile uint8_t state;
+  volatile uint8_t flag;
 } Interrupts;
 
 const Pins pins = {9, 10, 11, 2};
-Timers timers = {50, 0, 0, 0, 0};
+Timers timers = {0, 0, 0, 0};
 Menu menu = {0, 0};
 Interrupts states = {0, 0};
+const uint8_t butt_delay = 50;
 
 void setup() {
   pinMode(pins.BUTTON, INPUT_PULLUP);
@@ -158,7 +158,7 @@ void loop() {
 }
 
 void read_butt() {
-  if ((millis() - timers.butt_time) > timers.butt_delay) {
+  if ((millis() - timers.butt_time) > butt_delay) {
     states.flag = 1;
     if (states.state < 1) states.state++;
     else states.state = 0;
@@ -340,43 +340,43 @@ void update_screen() {
   }
 }
 
-void RGB(int Red, int Green, int Blue) {
+void RGB(uint8_t Red, uint8_t Green, uint8_t Blue) {
   analogWrite(pins.RED, Red);
   analogWrite(pins.GREEN, Green);
   analogWrite(pins.BLUE, Blue);
 }
 
 void tungsten(float intensity) {
-  int brightness_red = (intensity / 100) * 255;
-  int brightness_green = (intensity / 100) * 187;
-  int brightness_blue = (intensity / 100) * 120;
+  uint8_t brightness_red = (intensity / 100) * 255;
+  uint8_t brightness_green = (intensity / 100) * 187;
+  uint8_t brightness_blue = (intensity / 100) * 120;
   RGB(brightness_red, brightness_green, brightness_blue);
 }
 
 void halogen(float intensity) {
-  int brightness_red = (intensity / 100) * 255;
-  int brightness_green = (intensity / 100) * 241;
-  int brightness_blue = (intensity / 100) * 224;
+  uint8_t brightness_red = (intensity / 100) * 255;
+  uint8_t brightness_green = (intensity / 100) * 241;
+  uint8_t brightness_blue = (intensity / 100) * 224;
   RGB(brightness_red, brightness_green, brightness_blue);
 }
 
 void carbon_arc(float intensity) {
-  int brightness_red = (intensity / 100) * 255;
-  int brightness_green = (intensity / 100) * 187;
-  int brightness_blue = (intensity / 100) * 120;
+  uint8_t brightness_red = (intensity / 100) * 255;
+  uint8_t brightness_green = (intensity / 100) * 187;
+  uint8_t brightness_blue = (intensity / 100) * 120;
   RGB(brightness_red, brightness_green, brightness_blue);
 }
 
 void sun(float intensity) {
-  int brightness_red = (intensity / 100) * 255;
-  int brightness_green = (intensity / 100) * 255;
-  int brightness_blue = (intensity / 100) * 251;
+  uint8_t brightness_red = (intensity / 100) * 255;
+  uint8_t brightness_green = (intensity / 100) * 255;
+  uint8_t brightness_blue = (intensity / 100) * 251;
   RGB(brightness_red, brightness_green, brightness_blue);
 }
 
 void blue_sky(float intensity) {
-  int brightness_red = (intensity / 100) * 64;
-  int brightness_green = (intensity / 100) * 156;
-  int brightness_blue = (intensity / 100) * 255;
+  uint8_t brightness_red = (intensity / 100) * 64;
+  uint8_t brightness_green = (intensity / 100) * 156;
+  uint8_t brightness_blue = (intensity / 100) * 255;
   RGB(brightness_red, brightness_green, brightness_blue);
 }
